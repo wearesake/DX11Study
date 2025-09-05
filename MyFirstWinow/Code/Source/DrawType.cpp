@@ -1,0 +1,8 @@
+enum DRAW_TYPE {
+    DRAW_POINT,
+    DRAW_LINE,
+    DRAW_RECT,
+    DRAW_RECT_TEXT,
+    DRAW_RECT_RGN,
+    DRAW_IMG,
+};
