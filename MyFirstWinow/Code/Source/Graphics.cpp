@@ -2,7 +2,7 @@
 #include "../../Dxerr/dxerr.h"
 #include <sstream>
 #include <d3dcompiler.h>
-
+#include "../../Macros/GraphicsThrowMacros.h"
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "D3DCompiler.lib");
@@ -34,7 +34,7 @@ Graphics::Graphics(HWND hwnd)
     
     HRESULT hr;
     
-    GFX_THROW_FAILED( D3D11CreateDeviceAndSwapChain(
+    GFX_THROW_INFO( D3D11CreateDeviceAndSwapChain(
         nullptr, 
         D3D_DRIVER_TYPE_HARDWARE, 
         nullptr, 
@@ -178,7 +178,7 @@ void Graphics::DrawTestTriangle()
     //绑定render target   渲染管线的最后一环 把像素着色器的输出结果写入 Render Target
     pDeviceContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), nullptr);
     /* -----------------------------Draw---------------------------------------*/
-    pDeviceContext->Draw((UINT)std::size( vertices ), 0u);
+    GFX_THROW_INFO_ONLY( pDeviceContext->Draw((UINT)std::size( vertices ), 0u) );
 }
 
 Graphics::HrException::HrException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMsgs ) noexcept
@@ -196,6 +196,7 @@ Graphics::HrException::HrException(int line, const char* file, HRESULT hr, std::
 
 const char* Graphics::HrException::what() const noexcept
 {
+    //std::hex 把整数输出为16进制， std::uppercase，把16进制中的字母A-F大写， std::dec恢复10进制
     std::ostringstream oss;
     oss << GetType() << std::endl
         << "[Error Code] 0x" << std::hex << std::uppercase << GetErrorCode()
@@ -234,6 +235,44 @@ std::string Graphics::HrException::GetErrorDescription() const noexcept
 }
 
 std::string Graphics::HrException::GetErrorInfo() const noexcept
+{
+    return info;
+}
+
+Graphics::InfoException::InfoException( int line,const char * file,std::vector<std::string> infoMsgs ) noexcept
+    :
+    Exception( line,file )
+{
+    // join all info messages with newlines into single string
+    for (int i = 0; i < infoMsgs.size(); i++)
+    {
+        info += infoMsgs[i];
+        info.push_back( '\n' );
+        if (i != infoMsgs.size() - 1)
+        {
+            info.push_back('\n');
+        }
+    }
+   
+}
+
+
+const char* Graphics::InfoException::what() const noexcept
+{
+    std::ostringstream oss;
+    oss << GetType() << std::endl
+        << "\n[Error Info]\n" << GetErrorInfo() << std::endl << std::endl;
+    oss << GetOriginString();
+    whatBuffer = oss.str();
+    return whatBuffer.c_str();
+}
+
+const char* Graphics::InfoException::GetType() const noexcept
+{
+    return "My Graphics Info Exception";
+}
+
+std::string Graphics::InfoException::GetErrorInfo() const noexcept
 {
     return info;
 }

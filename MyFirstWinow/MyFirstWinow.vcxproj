@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Code\Bindable\Bindable.h" />
     <ClInclude Include="Code\Include\App.h" />
     <ClInclude Include="Code\Include\DxgiInfoManager.h" />
     <ClInclude Include="Code\Include\framework.h" />

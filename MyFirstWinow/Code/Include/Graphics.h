@@ -5,19 +5,6 @@
 #include "MyException.h"
 #include "wrl.h"
 
-#define GFX_THROW_FAILED(hrcall) if( FAILED( hr = (hrcall) )) throw Graphics::HrException(__LINE__,__FILE__,hr)
-#define GFX_DEVICE_REMOVED_EXCEPT(hr) Graphics::DeviceRemovedException(__LINE__,__FILE__,hr)
-
-#ifndef NDEBUG
-#define GFX_EXCEPT(hr) Graphics::HrException(__LINE__,__FILE__,hr, infoManager.GetMessages())
-#define GFX_THROW_INFO(hrcall) infoManager.Set(); if( FAILED( hr = (hrcall) ) ) throw GFX_EXCEPT(hr)
-#define GFX_DEVICE_REMOVED_EXCEPT(hr) Graphics::DeviceRemovedException(__LINE__,__FILE__,hr, infoManager.GetMessages())
-#else
-#define GFX_EXCEPT(hr) Graphics::HrException(__LINE__,__FILE__,hr)
-#define GFX_THROW_INFO(hrcall) GFX_THROW_NOINFO(hrcall)
-#define GFX_DEVICE_REMOVED_EXCEPT(hr) Graphics::DeviceRemovedException(__LINE__,__FILE__,hr)
-#endif
-
 class Graphics {
 public:
     Graphics( HWND hwnd );
@@ -31,9 +18,6 @@ public:
         pDeviceContext->ClearRenderTargetView(pTarget.Get(), color );
     }
     void DrawTestTriangle();
-    
-    
-    
 
 public:
     class Exception : public MyException {
@@ -52,6 +36,16 @@ public:
         std::string GetErrorInfo() const noexcept;
     private:
         HRESULT hr;
+        std::string info;
+    };
+    class InfoException : public Exception
+    {
+    public:
+        InfoException( int line,const char* file,std::vector<std::string> infoMsgs ) noexcept;
+        const char* what() const noexcept override;
+        const char* GetType() const noexcept override;
+        std::string GetErrorInfo() const noexcept;
+    private:
         std::string info;
     };
     class DeviceRemovedException : public HrException {
