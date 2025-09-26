@@ -1,24 +1,38 @@
 #pragma once
 #include <d3d11.h>
-
+#include <DirectXMath.h>
 #include "DxgiInfoManager.h"
 #include "MyException.h"
 #include "wrl.h"
 
 class Graphics {
+    
+    friend class Bindable;
+    
 public:
     Graphics( HWND hwnd );
     Graphics( const Graphics& )  = delete;
     Graphics& operator = ( const Graphics& ) = delete;
     ~Graphics() = default;
     void EndFrame();
-    void ClearBuffer(float red, float green, float blue) noexcept
-    {
-        const float color[] =  { red, green, blue, 1.0f };
-        pDeviceContext->ClearRenderTargetView(pTarget.Get(), color );
-    }
+    void ClearBuffer(float red, float green, float blue) noexcept;
     void DrawTestTriangle();
+    void DrawIndexed(UINT count) noexcept(!_DEBUG);
+    void SetProjection(DirectX::FXMMATRIX proj) noexcept;
+    DirectX::XMMATRIX GetProjection() const noexcept;
 
+private:
+    DirectX::XMMATRIX m_proj;
+#ifndef NDEBUG
+    DxgiInfoManager infoManager;
+#endif
+    Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
+    Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapChain;
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext> pDeviceContext;
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTarget;
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pDepthStencil;
+
+    
 public:
     class Exception : public MyException {
         //继承构造函数（C++11 引入的“继承构造函数” 特性），不需要Exception自己再写一个自己的构造函数，可以直接继承父类
@@ -54,15 +68,7 @@ public:
     public:
         const char* GetType() const noexcept override;
     };
-
-#ifndef NDEBUG
-    DxgiInfoManager infoManager;
-#endif
     
-private:
-    Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
-    Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapChain;
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext> pDeviceContext;
-    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTarget;
+    
 };
 

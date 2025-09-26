@@ -22,7 +22,7 @@ IndexBuffer::IndexBuffer( Graphics & gfx, const std::vector<unsigned short> & in
      );
 }
 
-void IndexBuffer::Bind( Graphics & gfx )
+void IndexBuffer::Bind( Graphics & gfx ) noexcept
 {
     GetContext(gfx)->IASetIndexBuffer( pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0 );
 }
@@ -33,7 +33,7 @@ void IndexBuffer::Bind( Graphics & gfx )
 //--你不能修改类的成员变量（除非它们被 mutable 修饰）。
 //--你也不能调用其他的非 const 成员函数。
 //前面 const → 修饰返回值类型（const UINT）。
-UINT IndexBuffer::GetCount() const
+UINT IndexBuffer::GetCount() const noexcept
 {
     return m_indexCount;
 }

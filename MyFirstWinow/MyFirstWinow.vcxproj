@@ -138,6 +138,7 @@
     <ClInclude Include="Code\Bindable\InputLayout.h" />
     <ClInclude Include="Code\Bindable\Topology.h" />
     <ClInclude Include="Code\Bindable\VertexBuffer.h" />
+    <ClInclude Include="Code\Drawable\Box.h" />
     <ClInclude Include="Code\Drawable\Drawable.h" />
     <ClInclude Include="Code\Include\App.h" />
     <ClInclude Include="Code\Include\DxgiInfoManager.h" />
@@ -163,10 +164,13 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\Bindable\Bindable.cpp" />
     <ClCompile Include="Code\Bindable\IndexBuffer.cpp" />
     <ClCompile Include="Code\Bindable\InputLayout.cpp" />
     <ClCompile Include="Code\Bindable\Topology.cpp" />
     <ClCompile Include="Code\Bindable\VertexBuffer.cpp" />
+    <ClCompile Include="Code\Drawable\Box.cpp" />
+    <ClCompile Include="Code\Drawable\Drawable.cpp" />
     <ClCompile Include="Code\Source\App.cpp" />
     <ClCompile Include="Code\Source\DrawType.cpp" />
     <ClCompile Include="Code\Source\DxgiInfoManager.cpp" />

@@ -181,6 +181,28 @@ void Graphics::DrawTestTriangle()
     GFX_THROW_INFO_ONLY( pDeviceContext->Draw((UINT)std::size( vertices ), 0u) );
 }
 
+void Graphics::ClearBuffer(float red, float green, float blue) noexcept
+{
+    const float color[] = { red, green, blue, 1.0f };
+    pDeviceContext->ClearRenderTargetView( pTarget.Get(), color );
+    pDeviceContext->ClearDepthStencilView( pDepthStencil.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
+}
+
+void Graphics::DrawIndexed(UINT count) noexcept(!_DEBUG)
+{
+    GFX_THROW_INFO_ONLY( pDeviceContext->DrawIndexed(count, 0u, 0u) );
+}
+
+void Graphics::SetProjection( DirectX::FXMMATRIX proj ) noexcept
+{
+    m_proj = proj;
+}
+
+DirectX::XMMATRIX Graphics::GetProjection() const noexcept
+{
+    return m_proj;
+}
+
 Graphics::HrException::HrException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMsgs ) noexcept
     : Exception(line, file) , hr(hr) 
 {

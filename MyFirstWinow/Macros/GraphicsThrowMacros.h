@@ -21,3 +21,4 @@
 #define INFOMAN(gfx) HRESULT hr
 #else
 #define INFOMAN(gfx) HRESULT hr; DxgiInfoManager & infoManager = GetInfoManager(gfx);
+#endif

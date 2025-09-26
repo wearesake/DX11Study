@@ -4,7 +4,7 @@ Topology::Topology( Graphics & gfx, D3D11_PRIMITIVE_TOPOLOGY primitiveType) : m_
 {
 }
 
-void Topology::Bind(Graphics & gfx)
+void Topology::Bind(Graphics & gfx) noexcept
 {
     GetContext(gfx)->IASetPrimitiveTopology(m_primitiveType);
 }

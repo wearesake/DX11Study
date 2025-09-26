@@ -10,6 +10,6 @@ public:
 protected:
     static ID3D11DeviceContext* GetContext( Graphics& gfx ) noexcept;
     static ID3D11Device* GetDevice( Graphics& gfx ) noexcept;
-    static DxgiInfoManager& GetInfoManager( Graphics& gfx ) noexcept(!IS_DEBUG);    //!IS_DEBUG → 如果不是 Debug 模式，就标记为 noexcept(true)；如果是 Debug 模式，就允许抛异常。
+    static DxgiInfoManager& GetInfoManager( Graphics& gfx ) noexcept(!_DEBUG);
 
 };
