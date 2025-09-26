@@ -21,6 +21,7 @@ Global
 		{5B21C834-2E57-4B50-9606-983C093D0451}.Release|x64.Build.0 = Release|x64
 		{5B21C834-2E57-4B50-9606-983C093D0451}.Release|x86.ActiveCfg = Release|Win32
 		{5B21C834-2E57-4B50-9606-983C093D0451}.Release|x86.Build.0 = Release|Win32
+		{5B21C834-2E57-4B50-9606-983C093D0451}.Debug|x64.Deploy.0 = Debug|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
