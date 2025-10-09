@@ -3,9 +3,87 @@
 #include "../../Macros/WindowsThrowMacros.h"
 #include "../Source/DrawType.cpp"
 #include "../Include/KeyBoardEvent.h"
-#include <exception>
+#include "../../resource.h"
 #include <sstream>
 //#include "Mouse.h"
+
+// Window Class Stuff
+MyWindow::WindowClass MyWindow::WindowClass::wndClass;
+
+MyWindow::WindowClass::WindowClass() noexcept
+    :
+    hInst( GetModuleHandle( nullptr ) )
+{
+    WNDCLASSEX wc = { 0 };
+    wc.cbSize = sizeof( wc );
+    wc.style = CS_OWNDC;
+    wc.lpfnWndProc = HandleMsgSetup;
+    wc.cbClsExtra = 0;
+    wc.cbWndExtra = 0;
+    wc.hInstance = GetInstance();
+    wc.hIcon = static_cast<HICON>(LoadImage( 
+        GetInstance(),MAKEINTRESOURCE( IDD_MYFIRSTWINOW_DIALOG ),
+        IMAGE_ICON,32,32,0
+    ));
+    wc.hCursor = nullptr;
+    wc.hbrBackground = nullptr;
+    wc.lpszMenuName = nullptr;
+    wc.lpszClassName = GetName();
+    wc.hIconSm = static_cast<HICON>(LoadImage(
+        GetInstance(),MAKEINTRESOURCE( IDD_MYFIRSTWINOW_DIALOG ),
+        IMAGE_ICON,16,16,0
+    ));
+    RegisterClassEx( &wc );
+}
+
+MyWindow::WindowClass::~WindowClass()
+{
+    UnregisterClass( wndClassName,GetInstance() );
+}
+
+const char* MyWindow::WindowClass::GetName() noexcept
+{
+    return wndClassName;
+}
+
+HINSTANCE MyWindow::WindowClass::GetInstance() noexcept
+{
+    return wndClass.hInst;
+}
+
+
+MyWindow::MyWindow( int width,int height,const char* name )
+    :
+    width( width ),
+    height( height )
+{
+    // calculate window size based on desired client region size
+    RECT wr;
+    wr.left = 100;
+    wr.right = width + wr.left;
+    wr.top = 100;
+    wr.bottom = height + wr.top;
+    if( AdjustWindowRect( &wr,WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,FALSE ) == 0 )
+    {
+        throw CHWND_LAST_EXCEPT();
+    }
+    // create window & get hWnd
+    m_hwnd = CreateWindow(
+        WindowClass::GetName(),name,
+        WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
+        CW_USEDEFAULT,CW_USEDEFAULT,wr.right - wr.left,wr.bottom - wr.top,
+        nullptr,nullptr,WindowClass::GetInstance(),this
+    );
+    // check for error
+    if( m_hwnd == nullptr )
+    {
+        throw CHWND_LAST_EXCEPT();
+    }
+    // newly created windows start off as hidden
+    ShowWindow( m_hwnd,SW_SHOWDEFAULT );
+    // create graphics object
+    m_graphics = std::make_unique<Graphics>( m_hwnd );
+}
 
 MyWindow::MyWindow(std::string className) : m_className(std::move(className))
 { 
@@ -87,13 +165,12 @@ LRESULT CALLBACK MyWindow::MessageProc(HWND hwnd, UINT msg, WPARAM wparam, LPARA
     return DefWindowProcA(hwnd, msg, wparam, lparam);
 }
 
+
+
 LRESULT CALLBACK MyWindow::HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 { 
     switch (msg)
     { 
-        case WM_CREATE:
-            OutputDebugString("windows is created\n");
-            break;
         case WM_CLOSE:
             if (hwnd == m_hwnd)
             {
@@ -104,63 +181,39 @@ LRESULT CALLBACK MyWindow::HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPA
                 DestroyWindow(hwnd);
             }
             return -1;
-        case WM_PAINT:
-            m_gdi.OnPaint(hwnd, DRAW_IMG);
-            break;
-        case WM_KEYDOWN:
-            m_kb.Deal(KeyStatus::PRESSED, wparam, lparam);
-            break;
-        case WM_KEYUP:
-            m_kb.Deal(KeyStatus::RELEASED, wparam, lparam);
-            break;
-        case WM_CHAR:
-            m_kb.Deal(KeyStatus::CHAR, wparam, lparam);
-            break;
-        case WM_LBUTTONDOWN:
-            m_mouse.Deal(MouseStatus::CLICKED, hwnd, wparam, lparam);
-            break;
-        case WM_LBUTTONUP:
-            m_mouse.Deal(MouseStatus::RELEASED, hwnd, wparam, lparam);
-            break;
-        case WM_LBUTTONDBLCLK:
-            m_mouse.Deal(MouseStatus::DOUBLE_CLICKED, hwnd, wparam, lparam);
-            break;
-        case WM_RBUTTONDOWN:
-            break;
-        case WM_RBUTTONUP:
-            break;
-        case WM_RBUTTONDBLCLK:
-            break;
-        case WM_MOUSEMOVE:
-            m_mouse.Deal(MouseStatus::MOVE, hwnd, wparam, lparam);
-            break;
-        case WM_BUTTON_CREATE:
-        {
-            std::unique_ptr<ButtonContent> recvCtx(reinterpret_cast<ButtonContent*>(lparam));
-            button(hwnd, recvCtx->text, recvCtx->x, recvCtx->y, recvCtx->width, recvCtx->height);
-            break;
-        }
-        case WM_CHECKBOX_CREATE:
-        {
-            std::unique_ptr<CheckBoxContent> recvCtx(reinterpret_cast<CheckBoxContent*>(lparam));
-            checkBox(hwnd, recvCtx->text, recvCtx->x, recvCtx->y, recvCtx->width, recvCtx->height);
-            break;
-        }
-        case WM_COMMAND:
-            switch (LOWORD(wparam))
-            {
-            case IDB_BUTTON:
-                break;
-            case IDB_CHECKBOX:
-                onDealCheckBox(hwnd, wparam, lparam);
-                break;
-            default:
-                break;
-            }
-        default: break;
+        
     }
     return DefWindowProc(hwnd, msg, wparam, lparam);
 }
+
+LRESULT CALLBACK MyWindow::HandleMsgSetup( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept
+{
+    // use create parameter passed in from CreateWindow() to store window class pointer at WinAPI side
+    if( msg == WM_NCCREATE )
+    {
+        // extract ptr to window class from creation data
+        const CREATESTRUCTW* const pCreate = reinterpret_cast<CREATESTRUCTW*>(lParam);
+        MyWindow* const pWnd = static_cast<MyWindow*>(pCreate->lpCreateParams);
+        // set WinAPI-managed user data to store ptr to window instance
+        SetWindowLongPtr( hWnd,GWLP_USERDATA,reinterpret_cast<LONG_PTR>(pWnd) );
+        // set message proc to normal (non-setup) handler now that setup is finished
+        SetWindowLongPtr( hWnd,GWLP_WNDPROC,reinterpret_cast<LONG_PTR>(&MyWindow::HandleMsgThunk) );
+        // forward message to window instance handler
+        return pWnd->HandleMessage( hWnd,msg,wParam,lParam );
+    }
+    // if we get a message before the WM_NCCREATE message, handle with default handler
+    return DefWindowProc( hWnd,msg,wParam,lParam );
+}
+
+LRESULT CALLBACK MyWindow::HandleMsgThunk( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept
+{
+    // retrieve ptr to window instance
+    MyWindow* const pWnd = reinterpret_cast<MyWindow*>(GetWindowLongPtr( hWnd,GWLP_USERDATA ));
+    // forward message to window instance handler
+    return pWnd->HandleMessage( hWnd,msg,wParam,lParam );
+}
+
+
 
 Graphics& MyWindow::GetGraphics()
 {
@@ -178,7 +231,7 @@ std::optional<int> MyWindow::ProcessMessages()
     { 
         if (msg.message == WM_QUIT)
         {
-            return msg.wParam;
+            return (int)msg.wParam;
         }
         
         TranslateMessage(&msg);

@@ -50,15 +50,40 @@ public:
         using Exception::Exception;
         const  char* GetType() const noexcept override;
     };
+private:
+    // singleton manages registration/cleanup of window class
+    class WindowClass
+    {
+    public:
+        static const char* GetName() noexcept;
+        static HINSTANCE GetInstance() noexcept;
+    private:
+        WindowClass() noexcept;
+        ~WindowClass();
+        WindowClass( const WindowClass& ) = delete;
+        WindowClass& operator=( const WindowClass& ) = delete;
+        static constexpr const char* wndClassName = "Direct3D Engine Window";
+        static WindowClass wndClass;
+        HINSTANCE hInst;
+    };
 
 public:
+    MyWindow( int width,int height,const char* name );
     explicit MyWindow(std::string className);
     ~MyWindow();
     MyWindow(const MyWindow& other) = delete;
     MyWindow(MyWindow& other) noexcept = delete;
     MyWindow& operator=(const MyWindow&) = delete;
     MyWindow& operator=(MyWindow&&) noexcept = delete;
-
+    
+    Graphics& GetGraphics();
+    static std::optional<int> ProcessMessages();
+private:
+    static LRESULT CALLBACK HandleMsgSetup( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept;
+    static LRESULT CALLBACK HandleMsgThunk( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept;
+    //LRESULT HandleMsg( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam ) noexcept;
+    LRESULT CALLBACK HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+    
 public:
     void Button(const std::string& text, int x, int y, int width = 150, int height = 30);
     void CheckBox(const std::string& text, int x, int y, int width = 150, int height = 30);
@@ -74,12 +99,11 @@ public:
     std::optional<bool> Begin(const std::string& name, int x, int y, int width, int height);
     std::optional<bool> BeginAt(const std::string& name, int x, int y);
     static LRESULT CALLBACK MessageProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT CALLBACK HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+    //LRESULT CALLBACK HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     std::string m_className;
     HINSTANCE m_hinstance = GetModuleHandle(nullptr);
-    HWND m_hwnd = nullptr;
     int m_x = CW_USEDEFAULT;
     int m_y = CW_USEDEFAULT;
     int m_width = CW_USEDEFAULT;
@@ -89,17 +113,15 @@ private:
     Mouse m_mouse;
     
 private:
+    
+
+public:
+    Mouse mouse;
+private:
+    int width;
+    int height;
+    HWND m_hwnd;
     std::unique_ptr<Graphics> m_graphics;
 
 
-public:
-    HWND GetHwnd()
-    {
-        return m_hwnd;
-    }
-
-    Graphics& GetGraphics();
-  
-
-    static std::optional<int> ProcessMessages();
 };

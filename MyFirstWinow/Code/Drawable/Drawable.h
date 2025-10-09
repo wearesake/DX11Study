@@ -18,5 +18,5 @@ public:
     virtual ~Drawable() = default;
 private:
     const IndexBuffer *m_pIndexBuffer = nullptr;
-    std::vector<std::unique_ptr<Bindable>> mBinds;
+    std::vector<std::unique_ptr<Bindable>> m_binds;
 };

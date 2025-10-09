@@ -24,7 +24,7 @@ IndexBuffer::IndexBuffer( Graphics & gfx, const std::vector<unsigned short> & in
 
 void IndexBuffer::Bind( Graphics & gfx ) noexcept
 {
-    GetContext(gfx)->IASetIndexBuffer( pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0 );
+    GetContext(gfx)->IASetIndexBuffer( pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u );
 }
 
 //后面 const → 修饰成员函数，使其成为“常量成员函数”

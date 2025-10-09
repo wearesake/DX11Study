@@ -6,6 +6,7 @@ class App {
 public:
     App();
     int Go();
+    ~App();
 
 private:
     void DoFrame();
@@ -13,5 +14,6 @@ private:
 private:
     MyWindow wnd;
     MyTimer timer;
+    std::vector<std::unique_ptr<class Box>> boxes;
 };
 

@@ -4,9 +4,10 @@
 
 class VertexBuffer : public Bindable
 {
+public:
     template<class V>
     VertexBuffer( Graphics & gfx, const std::vector< V > & vertices )
-        : stride( sizeof( V ))
+        : m_stride( sizeof( V ))
     {
         INFOMAN( gfx );
 
@@ -20,12 +21,12 @@ class VertexBuffer : public Bindable
         D3D11_SUBRESOURCE_DATA sd = {};
         sd.pSysMem = vertices.data();
         GFX_THROW_INFO(
-            GetDevice( gfx )->CreateBuffer( &bd, &sd, &pVertexBuffer ) );
+            GetDevice( gfx )->CreateBuffer( &bd, &sd, &m_pVertexBuffer ) );
         
     }
     void Bind(Graphics & gfx ) noexcept override;
 
 protected:
-    UINT mStride;
-    Microsoft::WRL::ComPtr<ID3DBlob> m_pVertexBuffer;
+    UINT m_stride;
+    Microsoft::WRL::ComPtr<ID3D11Buffer> m_pVertexBuffer;
 };
