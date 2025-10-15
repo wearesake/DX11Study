@@ -7,8 +7,8 @@ IndexBuffer::IndexBuffer( Graphics & gfx, const std::vector<unsigned short> & in
     INFOMAN(gfx);
     
      D3D11_BUFFER_DESC bufferDesc = {};
-     bufferDesc.ByteWidth = sizeof( m_indexCount * sizeof(unsigned short));    //缓冲区的大小（以字节为单位）。
-     bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+     bufferDesc.ByteWidth = UINT( m_indexCount * sizeof(unsigned short));    //缓冲区的大小（以字节为单位）。
+     bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
      bufferDesc.Usage = D3D11_USAGE_DEFAULT;
      bufferDesc.CPUAccessFlags = 0u;
      bufferDesc.MiscFlags = 0u;
