@@ -2,6 +2,8 @@
 #include "../Bindable/BindableBase.h"
 #include "../../Macros/GraphicsThrowMacros.h"
 
+//随机引擎（engine）：负责产生随机比特流 这里是 std::mt19937（Mersenne Twister 算法）
+//分布器（distribution）：将随机数映射到特定范围 ➜ 比如 uniform_real_distribution<float>(a, b) 表示 [a, b) 之间的均匀分布
 Box::Box( Graphics& gfx,
 	std::mt19937& rng,
 	std::uniform_real_distribution<float>& adist,
@@ -16,10 +18,11 @@ Box::Box( Graphics& gfx,
 	dphi( odist( rng ) ),
 	dtheta( odist( rng ) ),
 	dchi( odist( rng ) ),
-	chi( adist( rng ) ),
-	theta( adist( rng ) ),
-	phi( adist( rng ) )
+	chi( adist( rng ) ),	//z轴角
+	theta( adist( rng ) ), //水平角
+	phi( adist( rng ) )	//垂直角
 {
+	//ddist → 垂直方向（pitch） adist → 水平方向（yaw）
 	struct Vertex
 	{
 		struct
@@ -29,6 +32,7 @@ Box::Box( Graphics& gfx,
 			float z;
 		} pos;
 	};
+	//{0, 0, 0} 通常会出现在屏幕的中心。
 	const std::vector<Vertex> vertices =
 	{
 		{ -1.0f,-1.0f,-1.0f },
@@ -40,7 +44,7 @@ Box::Box( Graphics& gfx,
 		{ -1.0f,1.0f,1.0f },
 		{ 1.0f,1.0f,1.0f },
 	};
-	AddBind( std::make_unique<VertexBuffer>( gfx,vertices )	);
+	AddBind( std::make_unique<VertexBuffer>( gfx,vertices ) );
 	
 	const std::vector<unsigned short> indices =
 	{
