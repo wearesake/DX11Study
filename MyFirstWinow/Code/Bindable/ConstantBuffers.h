@@ -10,6 +10,10 @@ public:
 	{
 		INFOMAN( gfx );
 
+		//Map()：映射 GPU 缓冲区到 CPU 地址空间；
+		//memcpy()：把新的常量数据复制进去；
+		//Unmap()：解除映射，让 GPU 能再次访问；
+		//D3D11_MAP_WRITE_DISCARD：表示每次更新都丢弃旧内容，效率最高。
 		D3D11_MAPPED_SUBRESOURCE msr;
 		GFX_THROW_INFO( GetContext( gfx )->Map(
 			pConstantBuffer.Get(),0u,

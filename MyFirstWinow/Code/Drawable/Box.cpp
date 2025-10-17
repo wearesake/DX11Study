@@ -66,7 +66,7 @@ Box::Box( Graphics& gfx,
 	{
 		{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
 	};
-	AddBind( std::make_unique<InputLayout>( gfx,ied,pvsbc ) );
+	AddBind( std::make_unique<InputLayout>( gfx,ied,pvsbc ) ); //创建并绑定 InputLayout, 告诉 GPU 如何把顶点数据传给 VS
 	
 	AddBind( std::make_unique<PixelShader>( gfx,L"./ShaderProject/PixelShader.cso" ) );
 
@@ -92,10 +92,10 @@ Box::Box( Graphics& gfx,
 		}
 	};
 
-	AddBind( std::make_unique<PixelConstantBuffer<ConstantBuffer2>>( gfx,cb2 ) );
+	AddBind( std::make_unique<PixelConstantBuffer<ConstantBuffer2>>( gfx,cb2 ) ); //提供颜色、光照、材质等参数
 	AddBind( std::make_unique<TransformCbuf>( gfx,*this ) );
 
-	AddBind( std::make_unique<Topology>( gfx,D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) );
+	AddBind( std::make_unique<Topology>( gfx,D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) ); //告诉 GPU 如何把顶点组合成几何体（如三角形、线段）
 	
 }
 
@@ -111,8 +111,19 @@ void Box::Update( float dt ) noexcept
 
 DirectX::XMMATRIX Box::GetTransformXM() const noexcept
 {
+	//DirectX 是 行向量 × 矩阵 的方式运算（右乘生效）。
+	//所以矩阵乘法从右往左执行。
+	//模型坐标
+	//→ (4) 整个系统平移到 z=20
+	//→ (3) 围绕原点旋转（公转）
+	//→ (2) 平移到半径 r 的位置
+	//→ (1) 自身旋转（自转）
 	return DirectX::XMMatrixRotationRollPitchYaw( pitch,yaw,roll ) *
 		DirectX::XMMatrixTranslation( r,0.0f,0.0f ) *
 		DirectX::XMMatrixRotationRollPitchYaw( theta,phi,chi ) *
 		DirectX::XMMatrixTranslation( 0.0f,0.0f,20.0f );
+	//XMMatrixTranslation(0.0f, 0.0f, 20.0f)	场景平移	把整个物体系统移动到摄像机前方 z=20 的位置（否则物体可能在摄像机后面不可见）
+	//XMMatrixRotationRollPitchYaw(theta, phi, chi)	公转旋转	模拟物体围绕某中心（比如原点）旋转
+	//XMMatrixTranslation(r, 0.0f, 0.0f)	半径偏移	让物体沿 x 轴偏移 r 个单位（离旋转中心的距离）
+	//XMMatrixRotationRollPitchYaw(pitch, yaw, roll)	自转	模拟物体自身旋转（例如地球自转）
 }
