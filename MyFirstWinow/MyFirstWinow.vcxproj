@@ -102,7 +102,7 @@
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>false</ConformanceMode>
+      <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
     </ClCompile>
@@ -178,6 +178,7 @@
     <ClCompile Include="Code\Bindable\VertexShader.cpp" />
     <ClCompile Include="Code\Drawable\Box.cpp" />
     <ClCompile Include="Code\Drawable\Drawable.cpp" />
+    <ClCompile Include="Code\Drawable\DrawableBase.h" />
     <ClCompile Include="Code\Source\App.cpp" />
     <ClCompile Include="Code\Source\DrawType.cpp" />
     <ClCompile Include="Code\Source\DxgiInfoManager.cpp" />

@@ -22,6 +22,13 @@ Box::Box( Graphics& gfx,
 	theta( adist( rng ) ), //水平角
 	phi( adist( rng ) )	//垂直角
 {
+
+	if ( IsStaticInitialized() )
+	{
+		AddBind( std::make_unique<TransformCbuf>( gfx,*this ) );
+		return;
+	}
+	
 	//ddist → 垂直方向（pitch） adist → 水平方向（yaw）
 	struct Vertex
 	{
@@ -93,10 +100,10 @@ Box::Box( Graphics& gfx,
 	};
 
 	AddBind( std::make_unique<PixelConstantBuffer<ConstantBuffer2>>( gfx,cb2 ) ); //提供颜色、光照、材质等参数
+	AddBind( std::make_unique<Topology>( gfx,D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) ); //告诉 GPU 如何把顶点组合成几何体（如三角形、线段）
+
 	AddBind( std::make_unique<TransformCbuf>( gfx,*this ) );
 
-	AddBind( std::make_unique<Topology>( gfx,D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) ); //告诉 GPU 如何把顶点组合成几何体（如三角形、线段）
-	
 }
 
 void Box::Update( float dt ) noexcept
