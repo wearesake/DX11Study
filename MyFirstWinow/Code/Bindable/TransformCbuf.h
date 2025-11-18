@@ -14,6 +14,6 @@ private:
     //视图矩阵（View）
     //投影矩阵（Projection）
     //或者它们的组合（MVP）
-    VertexConstantBuffer<DirectX::XMMATRIX> vcbuf; //DirectX::XMMATRIX 是 4×4 矩阵类型
+    static std::unique_ptr<VertexConstantBuffer<DirectX::XMMATRIX>> pVcbuf; //DirectX::XMMATRIX 是 4×4 矩阵类型
     const Drawable& parent;
 };

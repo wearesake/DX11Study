@@ -17,10 +17,24 @@ public:
     }
     void AddStaticIndexBuffer( std::unique_ptr<IndexBuffer> ibuf ) noexcept(!_DEBUG)
     {
-        assert( m_pIndexBuffer == nullptr );
+        assert( "Attempting to add index buffer a second time" && m_pIndexBuffer == nullptr );
         m_pIndexBuffer = ibuf.get();
         staticBinds.push_back( std::move(ibuf) );
     }
+    void SetIndexFromStatic() noexcept(!_DEBUG)
+    {
+        assert("Attempting to add index buffer a second time" && m_pIndexBuffer == nullptr);
+        for (const auto &b : staticBinds)
+        {
+            if (const auto p = dynamic_cast<IndexBuffer*>(b.get()) )
+            {
+                m_pIndexBuffer = p;
+                return;
+            }
+        }
+        assert("Failed to find index buffer in static binds" && m_pIndexBuffer != nullptr);
+    }
+    
 private:
     const std::vector<std::unique_ptr<Bindable>>& GetStaticBinds() const noexcept override
     {

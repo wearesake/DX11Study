@@ -25,7 +25,8 @@ Box::Box( Graphics& gfx,
 
 	if ( IsStaticInitialized() )
 	{
-		AddStaticBind( std::make_unique<TransformCbuf>( gfx,*this ) );
+		SetIndexFromStatic();
+		AddBind( std::make_unique<TransformCbuf>( gfx,*this ) );
 		return;
 	}
 	
@@ -102,8 +103,9 @@ Box::Box( Graphics& gfx,
 	AddStaticBind( std::make_unique<PixelConstantBuffer<ConstantBuffer2>>( gfx,cb2 ) ); //提供颜色、光照、材质等参数
 	AddStaticBind( std::make_unique<Topology>( gfx,D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) ); //告诉 GPU 如何把顶点组合成几何体（如三角形、线段）
 
-	AddStaticBind( std::make_unique<TransformCbuf>( gfx,*this ) );
+	AddBind( std::make_unique<TransformCbuf>( gfx,*this ) );
 
+	
 }
 
 void Box::Update( float dt ) noexcept
