@@ -50,22 +50,25 @@ Graphics::Graphics(HWND hwnd)
     ) );
     //智能指针，引用为零时自动释放
     Microsoft::WRL::ComPtr<ID3D11Resource> pBackBuffer;
-    GFX_THROW_INFO( pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer ) );
-    GFX_THROW_INFO( pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &pTarget) );
+    GFX_THROW_INFO( pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer ) ); //得到 DXGI 交换链中的后缓冲区纹理对象
+    GFX_THROW_INFO( pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &pTarget) ); //把绘制结果输出到这张后缓冲的纹理上
 
     //!!!2025/10/09 今天一下午出不来显示box, 寻找了4个小时的差异才发现是这里的代码少了。--需要消化看懂原因
+    //深度测试（Depth Test）决定哪些像素应该显示在前面，哪些应该被挡在后面。 
     // create depth stensil state
     D3D11_DEPTH_STENCIL_DESC dsDesc = {};
     dsDesc.DepthEnable = TRUE;
     dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
     dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
     Microsoft::WRL::ComPtr<ID3D11DepthStencilState> pDSState;
+    //配置深度测试行为的规则，也就是“判断谁在前、谁在后”的逻辑。
     GFX_THROW_INFO( pDevice->CreateDepthStencilState( &dsDesc,&pDSState ) );
 
     // bind depth state
     pDeviceContext->OMSetDepthStencilState( pDSState.Get(),1u );
 
     // create depth stensil texture
+    // 创建深度缓冲区（Depth Buffer）
     Microsoft::WRL::ComPtr<ID3D11Texture2D> pDepthStencil;
     D3D11_TEXTURE2D_DESC descDepth = {};
     descDepth.Width = 800u;
@@ -80,6 +83,7 @@ Graphics::Graphics(HWND hwnd)
     GFX_THROW_INFO( pDevice->CreateTexture2D( &descDepth,nullptr,&pDepthStencil ) );
 
     // create view of depth stensil texture
+    // 把刚才创建的“深度纹理”包装成 GPU 可以使用的“视图”，告诉管线如何访问这块内存。
     D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
     descDSV.Format = DXGI_FORMAT_D32_FLOAT;
     descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
@@ -92,6 +96,7 @@ Graphics::Graphics(HWND hwnd)
     pDeviceContext->OMSetRenderTargets( 1u,pTarget.GetAddressOf(),pDSV.Get() );
 	   
     // configure viewport
+    // 配置视口（Viewport） 
     D3D11_VIEWPORT vp;
     vp.Width = 800.0f;
     vp.Height = 600.0f;
