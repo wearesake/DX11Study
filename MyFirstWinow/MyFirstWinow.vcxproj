@@ -143,7 +143,10 @@
     <ClInclude Include="Code\Bindable\VertexBuffer.h" />
     <ClInclude Include="Code\Bindable\VertexShader.h" />
     <ClInclude Include="Code\Drawable\Box.h" />
+    <ClInclude Include="Code\Drawable\Cube.h" />
     <ClInclude Include="Code\Drawable\Drawable.h" />
+    <ClInclude Include="Code\Drawable\IndexedTriangleList.h" />
+    <ClInclude Include="Code\Drawable\MyMath.h" />
     <ClInclude Include="Code\Include\App.h" />
     <ClInclude Include="Code\Include\DxgiInfoManager.h" />
     <ClInclude Include="Code\Include\framework.h" />

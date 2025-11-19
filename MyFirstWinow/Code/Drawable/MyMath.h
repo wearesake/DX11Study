@@ -1,0 +1,33 @@
+﻿//const 相当于只读
+//constexpr 只读并且必须在编译期求值（更强约束） -- 编译期计算，无运行时开销
+
+#pragma once
+#include <math.h>
+
+constexpr float PI = 3.14159265f;
+constexpr double PI_D = 3.1415926535897932;
+
+template <typename T>
+constexpr auto sq( const T& x )
+{
+    return x * x;
+}
+
+template<typename T>
+T wrap_angle( T theta )
+{
+    const T modded = fmod( theta, (T)2.0 * (T)PI_D );
+    return (modded > (T)PI_D ) ? (modded - (T)2.0 * (T)PI_D ) : modded;
+}
+
+template<typename T>
+constexpr T interpolate( const T& src, const T& dst, float alpha )
+{
+    return src + ( dst - src ) * alpha;
+}
+
+template<typename T>
+constexpr T to_rad( T deg )
+{
+    return deg * PT / (T)180.0;
+}
