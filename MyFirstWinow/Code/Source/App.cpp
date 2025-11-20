@@ -9,11 +9,12 @@ App::App() : wnd(800, 600, "The Donkey Fart Box")
     std::uniform_real_distribution<float> ddist( 0.0f,3.1415f * 2.0f ); //垂直方向角度
     std::uniform_real_distribution<float> odist( 0.0f,3.1415f * 0.3f ); //方向偏移
     std::uniform_real_distribution<float> rdist( 6.0f,20.0f ); // 表示半径或距离分布
-    for( auto i = 0; i < 10; i++ )
+    std::uniform_real_distribution<float> bdist( 0.4f,3.0f ); //缩放
+    for( auto i = 0; i < 80; i++ )
     {
         boxes.push_back( std::make_unique<Box>(
             wnd.GetGraphics(),rng,adist,
-            ddist,odist,rdist
+            ddist,odist,rdist,bdist
         ) );
     }
     wnd.GetGraphics().SetProjection( DirectX::XMMatrixPerspectiveLH( 1.0f,3.0f / 4.0f,0.5f,40.0f ) );

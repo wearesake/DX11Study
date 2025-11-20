@@ -7,11 +7,11 @@ class IndexedTriangleList
 {
 public:
     IndexedTriangleList() = default;
-    IndexedTriangleList( std::vector<T> verts_in, std::vector<unsigned int> indices_in )
-        : vertices( std::move(verts_in) ), indeces(std::move( indices_in )) //std::move 把一个对象转换为 右值引用（T&&），从而允许编译器调用移动构造或移动赋值。
+    IndexedTriangleList( std::vector<T> verts_in, std::vector<unsigned short> indices_in )
+        : vertices( std::move(verts_in) ), indices(std::move( indices_in )) //std::move 把一个对象转换为 右值引用（T&&），从而允许编译器调用移动构造或移动赋值。
     {
         assert( vertices.size() > 2 );
-        assert( indeces.size() % 3 == 0 );
+        assert( indices.size() % 3 == 0 );
     }
     void Transform( DirectX::FXMMATRIX matrix )
     {
@@ -27,5 +27,5 @@ public:
     }
 public:
     std::vector<T> vertices;
-    std::vector<unsigned int> indices;
+    std::vector<unsigned short> indices;
 };

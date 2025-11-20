@@ -13,19 +13,21 @@ public:
         constexpr float side = 1.0f / 2.0f;
 
         std::vector<dx::XMFLOAT3> vertices;
-        vertices.push_back( -side, -side, -side );
-        vertices.push_back( side, -side, -side );
-        vertices.push_back( -side, side, -side );
-        vertices.push_back( side, side, -side );
-        vertices.push_back( -side, -side, side );
-        vertices.push_back( side, -side, side );
-        vertices.push_back( -side, side, side );
-        vertices.push_back( side, side, side );
+        //push_back 需要先构造对象再复制/移动到容器里
+        //emplace_back 直接在容器内原地构造对象（避免临时对象）
+        vertices.emplace_back( -side, -side, -side );
+        vertices.emplace_back( side, -side, -side );
+        vertices.emplace_back( -side, side, -side );
+        vertices.emplace_back( side, side, -side );
+        vertices.emplace_back( -side, -side, side );
+        vertices.emplace_back( side, -side, side );
+        vertices.emplace_back( -side, side, side );
+        vertices.emplace_back( side, side, side );
 
         std::vector<V> verts( vertices.size() );
         for ( size_t i = 0; i < vertices.size(); i++ )
         {
-            verts[i] = vertices[i];
+            verts[i].pos = vertices[i];
         }
         return{
             std::move( verts ), {

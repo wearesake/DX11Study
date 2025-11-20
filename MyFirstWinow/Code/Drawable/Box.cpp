@@ -1,6 +1,7 @@
 #include "Box.h"
 #include "../Bindable/BindableBase.h"
 #include "../../Macros/GraphicsThrowMacros.h"
+#include "Cube.h"
 
 //随机引擎（engine）：负责产生随机比特流 这里是 std::mt19937（Mersenne Twister 算法）
 //分布器（distribution）：将随机数映射到特定范围 ➜ 比如 uniform_real_distribution<float>(a, b) 表示 [a, b) 之间的均匀分布
@@ -9,7 +10,8 @@ Box::Box( Graphics& gfx,
 	std::uniform_real_distribution<float>& adist,
 	std::uniform_real_distribution<float>& ddist,
 	std::uniform_real_distribution<float>& odist,
-	std::uniform_real_distribution<float>& rdist )
+	std::uniform_real_distribution<float>& rdist,
+	std::uniform_real_distribution<float>& bdist )
 	:
 	r( rdist( rng ) ),
 	droll( ddist( rng ) ),
@@ -22,89 +24,77 @@ Box::Box( Graphics& gfx,
 	theta( adist( rng ) ), //水平角
 	phi( adist( rng ) )	//垂直角
 {
+	namespace dx = DirectX;
 
 	if ( IsStaticInitialized() )
 	{
 		SetIndexFromStatic();
-		AddBind( std::make_unique<TransformCbuf>( gfx,*this ) );
-		return;
+	}
+	else
+	{
+		//ddist → 垂直方向（pitch） adist → 水平方向（yaw）
+		struct Vertex
+		{
+			struct
+			{
+				dx::XMFLOAT3 pos;
+			};
+		};
+
+		const auto model = Cube::Make<Vertex>();
+		//{0, 0, 0} 通常会出现在屏幕的中心。
+	
+		AddStaticBind( std::make_unique<VertexBuffer>( gfx, model.vertices ) );
+	
+		AddStaticIndexBuffer( std::make_unique<IndexBuffer>( gfx,model.indices ) );
+
+		auto pvs = std::make_unique<VertexShader>( gfx,L"./ShaderProject/VertexShader.cso" );
+		auto pvsbc = pvs->GetBytecode();
+		AddStaticBind( std::move( pvs ) );
+	
+
+		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
+		{
+			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		};
+		AddStaticBind( std::make_unique<InputLayout>( gfx,ied,pvsbc ) ); //创建并绑定 InputLayout, 告诉 GPU 如何把顶点数据传给 VS
+	
+		AddStaticBind( std::make_unique<PixelShader>( gfx,L"./ShaderProject/PixelShader.cso" ) );
+
+		struct PixelShaderConstants
+		{
+			struct
+			{
+				float r;
+				float g;
+				float b;
+				float a;
+			} face_colors[8];
+		};
+		const PixelShaderConstants cb2 =
+		{
+			{
+				{ 1.0f,1.0f,1.0f },
+				{ 1.0f,0.0f,0.0f },
+				{ 0.0f,1.0f,0.0f },
+				{ 1.0f,1.0f,0.0f },
+				{ 0.0f,0.0f,1.0f },
+				{ 1.0f,0.0f,1.0f },
+				{ 0.0f,1.0f,1.0f },
+				{ 0.0f,0.0f,0.0f },
+			}
+		};
+
+		AddStaticBind( std::make_unique<PixelConstantBuffer<PixelShaderConstants>>( gfx,cb2 ) ); //提供颜色、光照、材质等参数
+		AddStaticBind( std::make_unique<Topology>( gfx,D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) ); //告诉 GPU 如何把顶点组合成几何体（如三角形、线段）
 	}
 	
-	//ddist → 垂直方向（pitch） adist → 水平方向（yaw）
-	struct Vertex
-	{
-		struct
-		{
-			float x;
-			float y;
-			float z;
-		} pos;
-	};
-	//{0, 0, 0} 通常会出现在屏幕的中心。
-	const std::vector<Vertex> vertices =
-	{
-		{ -1.0f,-1.0f,-1.0f },
-		{ 1.0f,-1.0f,-1.0f },
-		{ -1.0f,1.0f,-1.0f },
-		{ 1.0f,1.0f,-1.0f },
-		{ -1.0f,-1.0f,1.0f },
-		{ 1.0f,-1.0f,1.0f },
-		{ -1.0f,1.0f,1.0f },
-		{ 1.0f,1.0f,1.0f },
-	};
-	AddStaticBind( std::make_unique<VertexBuffer>( gfx,vertices ) );
-	
-	const std::vector<unsigned short> indices =
-	{
-		0,2,1, 2,3,1,
-		1,3,5, 3,7,5,
-		2,6,3, 3,6,7,
-		4,5,7, 4,7,6,
-		0,4,2, 2,4,6,
-		0,1,4, 1,5,4
-	};
-	AddStaticIndexBuffer( std::make_unique<IndexBuffer>( gfx,indices ) );
-
-	auto pvs = std::make_unique<VertexShader>( gfx,L"./ShaderProject/VertexShader.cso" );
-	auto pvsbc = pvs->GetBytecode();
-	AddStaticBind( std::move( pvs ) );
-	
-
-	const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
-	{
-		{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-	};
-	AddStaticBind( std::make_unique<InputLayout>( gfx,ied,pvsbc ) ); //创建并绑定 InputLayout, 告诉 GPU 如何把顶点数据传给 VS
-	
-	AddStaticBind( std::make_unique<PixelShader>( gfx,L"./ShaderProject/PixelShader.cso" ) );
-
-	struct ConstantBuffer2
-	{
-		struct
-		{
-			float r;
-			float g;
-			float b;
-			float a;
-		} face_colors[6];
-	};
-	const ConstantBuffer2 cb2 =
-	{
-		{
-			{ 1.0f,0.0f,1.0f },
-			{ 1.0f,0.0f,0.0f },
-			{ 0.0f,1.0f,0.0f },
-			{ 0.0f,0.0f,1.0f },
-			{ 1.0f,1.0f,0.0f },
-			{ 0.0f,1.0f,1.0f },
-		}
-	};
-
-	AddStaticBind( std::make_unique<PixelConstantBuffer<ConstantBuffer2>>( gfx,cb2 ) ); //提供颜色、光照、材质等参数
-	AddStaticBind( std::make_unique<Topology>( gfx,D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) ); //告诉 GPU 如何把顶点组合成几何体（如三角形、线段）
-
 	AddBind( std::make_unique<TransformCbuf>( gfx,*this ) );
-
+	
+	dx::XMStoreFloat3x3(
+		&mt,
+		dx::XMMatrixScaling( 1.0f, 1.0f, bdist(rng) )
+		);
 	
 }
 
@@ -127,7 +117,8 @@ DirectX::XMMATRIX Box::GetTransformXM() const noexcept
 	//→ (3) 围绕原点旋转（公转）
 	//→ (2) 平移到半径 r 的位置
 	//→ (1) 自身旋转（自转）
-	return DirectX::XMMatrixRotationRollPitchYaw( pitch,yaw,roll ) *
+	return DirectX::XMLoadFloat3x3( &mt ) *
+		DirectX::XMMatrixRotationRollPitchYaw( pitch,yaw,roll ) *
 		DirectX::XMMatrixTranslation( r,0.0f,0.0f ) *
 		DirectX::XMMatrixRotationRollPitchYaw( theta,phi,chi ) *
 		DirectX::XMMatrixTranslation( 0.0f,0.0f,20.0f );
