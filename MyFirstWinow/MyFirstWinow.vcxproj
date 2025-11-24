@@ -143,10 +143,12 @@
     <ClInclude Include="Code\Bindable\VertexBuffer.h" />
     <ClInclude Include="Code\Bindable\VertexShader.h" />
     <ClInclude Include="Code\Drawable\Box.h" />
+    <ClInclude Include="Code\Drawable\Cone.h" />
     <ClInclude Include="Code\Drawable\Cube.h" />
     <ClInclude Include="Code\Drawable\Drawable.h" />
     <ClInclude Include="Code\Drawable\IndexedTriangleList.h" />
     <ClInclude Include="Code\Drawable\MyMath.h" />
+    <ClInclude Include="Code\Drawable\Pyramid.h" />
     <ClInclude Include="Code\Include\App.h" />
     <ClInclude Include="Code\Include\DxgiInfoManager.h" />
     <ClInclude Include="Code\Include\framework.h" />
@@ -182,6 +184,7 @@
     <ClCompile Include="Code\Drawable\Box.cpp" />
     <ClCompile Include="Code\Drawable\Drawable.cpp" />
     <ClCompile Include="Code\Drawable\DrawableBase.h" />
+    <ClCompile Include="Code\Drawable\Pyramid.cpp" />
     <ClCompile Include="Code\Source\App.cpp" />
     <ClCompile Include="Code\Source\DrawType.cpp" />
     <ClCompile Include="Code\Source\DxgiInfoManager.cpp" />
