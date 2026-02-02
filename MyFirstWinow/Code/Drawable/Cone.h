@@ -3,6 +3,7 @@
 #include <DirectXMath.h>
 #include "MyMath.h"
 //?? 这个类的作用
+//Cone 圆锥
 class Cone
 {
 public:

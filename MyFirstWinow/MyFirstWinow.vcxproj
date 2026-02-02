@@ -147,8 +147,12 @@
     <ClInclude Include="Code\Drawable\Cube.h" />
     <ClInclude Include="Code\Drawable\Drawable.h" />
     <ClInclude Include="Code\Drawable\IndexedTriangleList.h" />
+    <ClInclude Include="Code\Drawable\Melon.h" />
     <ClInclude Include="Code\Drawable\MyMath.h" />
+    <ClInclude Include="Code\Drawable\Plane.h" />
+    <ClInclude Include="Code\Drawable\Prism.h" />
     <ClInclude Include="Code\Drawable\Pyramid.h" />
+    <ClInclude Include="Code\Drawable\Sphere.h" />
     <ClInclude Include="Code\Include\App.h" />
     <ClInclude Include="Code\Include\DxgiInfoManager.h" />
     <ClInclude Include="Code\Include\framework.h" />
@@ -184,6 +188,7 @@
     <ClCompile Include="Code\Drawable\Box.cpp" />
     <ClCompile Include="Code\Drawable\Drawable.cpp" />
     <ClCompile Include="Code\Drawable\DrawableBase.h" />
+    <ClCompile Include="Code\Drawable\Melon.cpp" />
     <ClCompile Include="Code\Drawable\Pyramid.cpp" />
     <ClCompile Include="Code\Source\App.cpp" />
     <ClCompile Include="Code\Source\DrawType.cpp" />
