@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "DrawableBase.h"
 
 class Melon : public DrawableBase<Melon>

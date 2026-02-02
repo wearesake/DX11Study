@@ -1,4 +1,4 @@
-﻿#include "Melon.h"
+#include "Melon.h"
 #include "../Bindable/BindableBase.h"
 #include "../../Macros/GraphicsThrowMacros.h"
 #include "Sphere.h"
@@ -28,11 +28,11 @@ Melon::Melon( Graphics& gfx,
 
 	if( !IsStaticInitialized() )
 	{
-		auto pvs = std::make_unique<VertexShader>( gfx,L"ColorIndexVS.cso" );
+		auto pvs = std::make_unique<VertexShader>( gfx,L"/ShaderProject/ColorIndexVS.cso" );
 		auto pvsbc = pvs->GetBytecode();
 		AddStaticBind( std::move( pvs ) );
 
-		AddStaticBind( std::make_unique<PixelShader>( gfx,L"ColorIndexPS.cso" ) );
+		AddStaticBind( std::make_unique<PixelShader>( gfx,L"/ShaderProject/ColorIndexPS.cso" ) );
 
 		struct PixelShaderConstants
 		{

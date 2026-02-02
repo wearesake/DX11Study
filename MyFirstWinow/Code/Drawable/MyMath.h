@@ -29,5 +29,5 @@ constexpr T interpolate( const T& src, const T& dst, float alpha )
 template<typename T>
 constexpr T to_rad( T deg )
 {
-    return deg * PT / (T)180.0;
+    return deg * PI / (T)180.0;
 }

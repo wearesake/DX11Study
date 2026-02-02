@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "IndexedTriangleList.h"
 #include <DirectXMath.h>
 #include "MyMath.h"
@@ -15,7 +15,7 @@ public:
 
 		constexpr float radius = 1.0f;
 		const auto base = dx::XMVectorSet( 0.0f,0.0f,radius,0.0f );
-		const  float lattitudeAngle = PI / latDiv;
+		const float lattitudeAngle = PI / latDiv;
 		const float longitudeAngle = 2.0f * PI / longDiv;
 
 		std::vector<V> vertices;
