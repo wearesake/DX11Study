@@ -2,7 +2,8 @@
 #include "MyWindow.h"
 #include "MyTimer.h"
 
-class App {
+class App
+{
 public:
     App();
     int Go();
@@ -15,5 +16,6 @@ private:
     MyWindow wnd;
     MyTimer timer;
     std::vector<std::unique_ptr<class Box>> boxes;
+    std::vector<std::unique_ptr<class Drawable>> drawables;
+    static constexpr size_t nDrawables = 180;
 };
-
