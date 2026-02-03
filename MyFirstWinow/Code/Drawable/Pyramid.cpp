@@ -50,7 +50,7 @@ Pyramid::Pyramid( Graphics &gfx,std::mt19937 &rng,
         auto pvsbc = pvs->GetBytecode();
         AddStaticBind( std::move(pvs) );
 
-        AddStaticBind( std::make_unique<PixelShader>(gfx, L"./ShaderProject/ColorBlendPS.csp") );
+        AddStaticBind( std::make_unique<PixelShader>(gfx, L"./ShaderProject/ColorBlendPS.cso") );
         AddStaticIndexBuffer( std::make_unique<IndexBuffer>(gfx, model.indices) );
 
         const std::vector<D3D11_INPUT_ELEMENT_DESC> ied = {
