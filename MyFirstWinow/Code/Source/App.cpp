@@ -4,7 +4,11 @@
 #include "../Drawable/Pyramid.h"
 #include "../Drawable/Melon.h"
 #include "../Drawable/MyMath.h"
+#include "../Drawable/Sheet.h"
+#include "../../Manager/GDIPlusManager.h"
 #include <memory>
+
+GDIPlusManager gdipm;
 
 App::App() : wnd(800, 600, "The Donkey Fart Box")
 {
@@ -46,6 +50,11 @@ App::App() : wnd(800, 600, "The Donkey Fart Box")
                 return std::make_unique<Melon>(
                     gfx,rng,adist,ddist,
                     odist,rdist,longdist,latdist
+                );
+            case 3:
+                return std::make_unique<Sheet>(
+                    gfx,rng,adist,ddist,
+                    odist,rdist
                 );
             default:
                 assert( false && "bad drawable type in factory" );
@@ -91,7 +100,7 @@ void App::DoFrame()
     wnd.GetGraphics().ClearBuffer( 0.07f, 0.0f, 0.12f);
     for (auto &d : drawables)
     {
-        d->Update(dt);
+        d->Update( wnd.kb.IsPressed( VK_SPACE ) ? 0.0f : dt );
         d->Draw(wnd.GetGraphics() );
     }
     wnd.GetGraphics().EndFrame();

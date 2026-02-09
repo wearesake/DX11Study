@@ -138,6 +138,8 @@
     <ClInclude Include="Code\Bindable\IndexBuffer.h" />
     <ClInclude Include="Code\Bindable\InputLayout.h" />
     <ClInclude Include="Code\Bindable\PixelShader.h" />
+    <ClInclude Include="Code\Bindable\Sampler.h" />
+    <ClInclude Include="Code\Bindable\Texture.h" />
     <ClInclude Include="Code\Bindable\Topology.h" />
     <ClInclude Include="Code\Bindable\TransformCbuf.h" />
     <ClInclude Include="Code\Bindable\VertexBuffer.h" />
@@ -152,6 +154,7 @@
     <ClInclude Include="Code\Drawable\Plane.h" />
     <ClInclude Include="Code\Drawable\Prism.h" />
     <ClInclude Include="Code\Drawable\Pyramid.h" />
+    <ClInclude Include="Code\Drawable\Sheet.h" />
     <ClInclude Include="Code\Drawable\Sphere.h" />
     <ClInclude Include="Code\Include\App.h" />
     <ClInclude Include="Code\Include\DxgiInfoManager.h" />
@@ -166,6 +169,7 @@
     <ClInclude Include="Code\Include\MyException.h" />
     <ClInclude Include="Code\Include\MyTimer.h" />
     <ClInclude Include="Code\Include\MyWindow.h" />
+    <ClInclude Include="Code\Include\Surface.h" />
     <ClInclude Include="Code\Include\Tools.h" />
     <ClInclude Include="Dxerr\dxerr.h" />
     <ClInclude Include="Dxerr\DXGetErrorDescription.inl" />
@@ -173,6 +177,7 @@
     <ClInclude Include="Dxerr\DXTrace.inl" />
     <ClInclude Include="Macros\GraphicsThrowMacros.h" />
     <ClInclude Include="Macros\WindowsThrowMacros.h" />
+    <ClInclude Include="Manager\GDIPlusManager.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -181,6 +186,7 @@
     <ClCompile Include="Code\Bindable\IndexBuffer.cpp" />
     <ClCompile Include="Code\Bindable\InputLayout.cpp" />
     <ClCompile Include="Code\Bindable\PixelShader.cpp" />
+    <ClCompile Include="Code\Bindable\Texture.cpp" />
     <ClCompile Include="Code\Bindable\Topology.cpp" />
     <ClCompile Include="Code\Bindable\TransformCbuf.cpp" />
     <ClCompile Include="Code\Bindable\VertexBuffer.cpp" />
@@ -190,6 +196,7 @@
     <ClCompile Include="Code\Drawable\DrawableBase.h" />
     <ClCompile Include="Code\Drawable\Melon.cpp" />
     <ClCompile Include="Code\Drawable\Pyramid.cpp" />
+    <ClCompile Include="Code\Drawable\Sheet.cpp" />
     <ClCompile Include="Code\Source\App.cpp" />
     <ClCompile Include="Code\Source\DrawType.cpp" />
     <ClCompile Include="Code\Source\DxgiInfoManager.cpp" />
@@ -202,9 +209,86 @@
     <ClCompile Include="Code\Source\MyException.cpp" />
     <ClCompile Include="Code\Source\MyTimer.cpp" />
     <ClCompile Include="Code\Source\MyWindow.cpp" />
+    <ClCompile Include="Code\Source\Surface.cpp">
+      <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>x64\Debug\</AssemblerListingLocation>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <BrowseInformationFile>x64\Debug\</BrowseInformationFile>
+      <CompileAs>Default</CompileAs>
+      <UseDynamicDebugging>false</UseDynamicDebugging>
+      <ConformanceMode>true</ConformanceMode>
+      <DiagnosticsFormat>Column</DiagnosticsFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <ErrorReporting>Prompt</ErrorReporting>
+      <ExpandAttributedSource>false</ExpandAttributedSource>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <EnableASAN>false</EnableASAN>
+      <EnableFuzzer>false</EnableFuzzer>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <EnableVectorLength>NotSet</EnableVectorLength>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <GenerateModuleDependencies>false</GenerateModuleDependencies>
+      <GenerateSourceDependencies>false</GenerateSourceDependencies>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ModuleDependenciesFile>x64\Debug\</ModuleDependenciesFile>
+      <ModuleOutputFile>x64\Debug\</ModuleOutputFile>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <ObjectFileName>x64\Debug\</ObjectFileName>
+      <CallingConvention>Cdecl</CallingConvention>
+      <ProgramDataBaseFileName>x64\Debug\vc143.pdb</ProgramDataBaseFileName>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>x64\Debug\MyFirstWinow.pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessKeepComments>false</PreprocessKeepComments>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ShowIncludes>false</ShowIncludes>
+      <SourceDependenciesFile>x64\Debug\</SourceDependenciesFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <SpectreMitigation>false</SpectreMitigation>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <TrackerLogDirectory>x64\Debug\MyFirstWinow.tlog\</TrackerLogDirectory>
+      <TranslateIncludes>false</TranslateIncludes>
+      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>true</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <XMLDocumentationFileName>x64\Debug\</XMLDocumentationFileName>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <IntelJCCErratum>false</IntelJCCErratum>
+      <BuildStlModules>false</BuildStlModules>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;</PreprocessorDefinitions>
+      <LinkCompiled>true</LinkCompiled>
+    </ClCompile>
     <ClCompile Include="Code\Source\Tools.cpp" />
     <ClCompile Include="Dxerr\dxerr.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Manager\GDIPlusManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MyFirstWinow.rc" />
@@ -213,6 +297,9 @@
     <Image Include="Recourse\bitmap2.bmp" />
     <Image Include="Recourse\MyFirstWinow.ico" />
     <Image Include="Recourse\small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Code\Bindable\Sampler.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

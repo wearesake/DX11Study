@@ -116,6 +116,7 @@ private:
     
 
 public:
+    KeyBoard kb;
     Mouse mouse;
 private:
     int width;
