@@ -155,6 +155,7 @@
     <ClInclude Include="Code\Drawable\Prism.h" />
     <ClInclude Include="Code\Drawable\Pyramid.h" />
     <ClInclude Include="Code\Drawable\Sheet.h" />
+    <ClInclude Include="Code\Drawable\SkinnedBox.h" />
     <ClInclude Include="Code\Drawable\Sphere.h" />
     <ClInclude Include="Code\Include\App.h" />
     <ClInclude Include="Code\Include\DxgiInfoManager.h" />
@@ -171,10 +172,6 @@
     <ClInclude Include="Code\Include\MyWindow.h" />
     <ClInclude Include="Code\Include\Surface.h" />
     <ClInclude Include="Code\Include\Tools.h" />
-    <ClInclude Include="Dxerr\dxerr.h" />
-    <ClInclude Include="Dxerr\DXGetErrorDescription.inl" />
-    <ClInclude Include="Dxerr\DXGetErrorString.inl" />
-    <ClInclude Include="Dxerr\DXTrace.inl" />
     <ClInclude Include="Macros\GraphicsThrowMacros.h" />
     <ClInclude Include="Macros\WindowsThrowMacros.h" />
     <ClInclude Include="Manager\GDIPlusManager.h" />
@@ -186,6 +183,7 @@
     <ClCompile Include="Code\Bindable\IndexBuffer.cpp" />
     <ClCompile Include="Code\Bindable\InputLayout.cpp" />
     <ClCompile Include="Code\Bindable\PixelShader.cpp" />
+    <ClCompile Include="Code\Bindable\Sampler.cpp" />
     <ClCompile Include="Code\Bindable\Texture.cpp" />
     <ClCompile Include="Code\Bindable\Topology.cpp" />
     <ClCompile Include="Code\Bindable\TransformCbuf.cpp" />
@@ -197,6 +195,7 @@
     <ClCompile Include="Code\Drawable\Melon.cpp" />
     <ClCompile Include="Code\Drawable\Pyramid.cpp" />
     <ClCompile Include="Code\Drawable\Sheet.cpp" />
+    <ClCompile Include="Code\Drawable\SkinnedBox.cpp" />
     <ClCompile Include="Code\Source\App.cpp" />
     <ClCompile Include="Code\Source\DrawType.cpp" />
     <ClCompile Include="Code\Source\DxgiInfoManager.cpp" />
@@ -286,7 +285,6 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="Code\Source\Tools.cpp" />
-    <ClCompile Include="Dxerr\dxerr.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Manager\GDIPlusManager.cpp" />
   </ItemGroup>
@@ -297,9 +295,6 @@
     <Image Include="Recourse\bitmap2.bmp" />
     <Image Include="Recourse\MyFirstWinow.ico" />
     <Image Include="Recourse\small.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Code\Bindable\Sampler.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

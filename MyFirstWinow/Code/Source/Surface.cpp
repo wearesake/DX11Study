@@ -2,13 +2,13 @@
 #include "../Include/Surface.h"
 #include <algorithm>
 #include <intsafe.h>
-
+#include <Windows.h> //要在gdiplus.h的前面
 namespace Gdiplus
 {
 	using std::min;
 	using std::max;
 }
-#include <Windows.h> //要在gdiplus.h的前面
+
 #include <gdiplus.h>
 #include <sstream>
 

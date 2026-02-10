@@ -1,5 +1,4 @@
 ﻿#include "../Include/Graphics.h"
-#include "../../Dxerr/dxerr.h"
 #include <sstream>
 #include <d3dcompiler.h>
 #include "../../Macros/GraphicsThrowMacros.h"
@@ -298,13 +297,14 @@ HRESULT Graphics::HrException::GetErrorCode() const noexcept
 
 std::string Graphics::HrException::GetErrorString() const noexcept
 {
-    return DXGetErrorString(hr);
+    //return DXGetErrorString(hr);
+    return ""; 
 }
 
 std::string Graphics::HrException::GetErrorDescription() const noexcept
 {
     char buf[512];
-    DXGetErrorDescription(hr, buf, sizeof(buf));
+    //DXGetErrorDescription(hr, buf, sizeof(buf));
     return buf;
 }
 
