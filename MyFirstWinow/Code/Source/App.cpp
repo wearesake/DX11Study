@@ -7,6 +7,7 @@
 #include "../Drawable/Sheet.h"
 #include "../Drawable/SkinnedBox.h"
 #include "../../Manager/GDIPlusManager.h"
+#include "../Imgui/imgui.h"
 #include <memory>
 
 GDIPlusManager gdipm;
@@ -102,13 +103,35 @@ int App::Go()
 
 void App::DoFrame()
 {
-    auto dt = timer.Mark();
-    wnd.GetGraphics().ClearBuffer( 0.07f, 0.0f, 0.12f);
+    auto dt = timer.Mark() * speed_factor;
+
+    if ( wnd.kb.IsPressed( VK_SPACE ) )
+    {
+        wnd.GetGraphics().DisableImgui();
+    }
+    else
+    {
+        wnd.GetGraphics().EnableImgui();
+    }
+    
+    wnd.GetGraphics().BeginFrame( 0.07f, 0.0f, 0.12f);
+    
     for (auto &d : drawables)
     {
         d->Update( wnd.kb.IsPressed( VK_SPACE ) ? 0.0f : dt );
         d->Draw(wnd.GetGraphics() );
     }
+
+    static char buffer[1024];
+
+    if ( ImGui::Begin("Simulation Speed") )
+    {
+        ImGui::SliderFloat( "Speed Factor", &speed_factor, 0.0f, 4.0f );
+        ImGui::Text( "Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate );
+        ImGui::InputText( "Butts", buffer, sizeof(buffer) );
+    }
+    ImGui::End();
+    
     wnd.GetGraphics().EndFrame();
 }
 

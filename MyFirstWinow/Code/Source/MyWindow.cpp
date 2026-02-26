@@ -5,6 +5,7 @@
 #include "../Include/KeyBoardEvent.h"
 #include "../../resource.h"
 #include <sstream>
+#include "../Imgui/imgui_impl_win32.h"
 //#include "Mouse.h"
 
 // Window Class Stuff
@@ -81,6 +82,8 @@ MyWindow::MyWindow( int width,int height,const char* name )
     }
     // newly created windows start off as hidden
     ShowWindow( m_hwnd,SW_SHOWDEFAULT );
+    // Init ImGui Win32 Impl
+    ImGui_ImplWin32_Init( m_hwnd );
     // create graphics object
     m_graphics = std::make_unique<Graphics>( m_hwnd );
 }
@@ -103,6 +106,7 @@ MyWindow::MyWindow(std::string className) : m_className(std::move(className))
 
 MyWindow::~MyWindow()
 {
+    ImGui_ImplWin32_Shutdown();
     DestroyWindow(m_hwnd);
     UnregisterClass(m_className.c_str(), m_hinstance);
 }
@@ -168,7 +172,12 @@ LRESULT CALLBACK MyWindow::MessageProc(HWND hwnd, UINT msg, WPARAM wparam, LPARA
 
 
 LRESULT CALLBACK MyWindow::HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
-{ 
+{
+    if ( ImGui_ImplWin32_WndProcHandler( hwnd, msg, wparam, lparam ) )
+    {
+        return true;
+    }
+    
     switch (msg)
     { 
         case WM_CLOSE:

@@ -15,14 +15,19 @@ public:
     Graphics& operator = ( const Graphics& ) = delete;
     ~Graphics() = default;
     void EndFrame();
+    void BeginFrame( float red,float green,float blue ) noexcept;
     void ClearBuffer(float red, float green, float blue) noexcept;
     void DrawTestTriangle();
     void DrawIndexed(UINT count) noexcept(!_DEBUG);
     void SetProjection(DirectX::FXMMATRIX proj) noexcept;
     DirectX::XMMATRIX GetProjection() const noexcept;
+    void EnableImgui() noexcept;
+    void DisableImgui() noexcept;
+    bool IsImguiEnabled() const noexcept;
 
 private:
     DirectX::XMMATRIX m_proj;
+    bool imguiEnabled = true;
 #ifndef NDEBUG
     DxgiInfoManager infoManager;
 #endif
