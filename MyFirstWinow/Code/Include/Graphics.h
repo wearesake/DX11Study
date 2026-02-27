@@ -21,11 +21,14 @@ public:
     void DrawIndexed(UINT count) noexcept(!_DEBUG);
     void SetProjection(DirectX::FXMMATRIX proj) noexcept;
     DirectX::XMMATRIX GetProjection() const noexcept;
+    void SetCamera( DirectX::FXMMATRIX cam ) noexcept;
+    DirectX::XMMATRIX GetCamera() const noexcept;
     void EnableImgui() noexcept;
     void DisableImgui() noexcept;
     bool IsImguiEnabled() const noexcept;
 
 private:
+    DirectX::XMMATRIX m_camera;
     DirectX::XMMATRIX m_proj;
     bool imguiEnabled = true;
 #ifndef NDEBUG

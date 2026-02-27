@@ -13,7 +13,9 @@ TransformCbuf::TransformCbuf( Graphics& gfx, const Drawable& parent )
 void TransformCbuf::Bind(Graphics& gfx) noexcept
 {
     pVcbuf->Update( gfx, DirectX::XMMatrixTranspose(
-            parent.GetTransformXM() * gfx.GetProjection()
+            parent.GetTransformXM() *
+            gfx.GetCamera() *
+            gfx.GetProjection()
         ) );
     //gfx.GetProjection() 返回当前的 投影矩阵。
 

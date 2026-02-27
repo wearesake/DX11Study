@@ -85,7 +85,8 @@ App::App() : wnd(800, 600, "The Donkey Fart Box")
     drawables.reserve( nDrawables );
     std::generate_n( std::back_inserter( drawables ),nDrawables,f );
 
-    wnd.GetGraphics().SetProjection( DirectX::XMMatrixPerspectiveLH( 1.0f,3.0f / 4.0f,0.5f,40.0f ) );
+    wnd.GetGraphics().SetProjection( DirectX::XMMatrixPerspectiveLH( 1.0f,9.0f / 16.0f,0.5f,40.0f ) ); //投影矩阵, 宽高比-宽可见范围，高可见范围，两个形成宽高比
+    //wnd.GetGraphics().SetCamera( DirectX::XMMatrixTranslation( 0.0f, 0.0f, 20.0f ) ); 把整个世界往 +Z 方向移动 20
 }
 
 
@@ -104,17 +105,9 @@ int App::Go()
 void App::DoFrame()
 {
     auto dt = timer.Mark() * speed_factor;
-
-    if ( wnd.kb.IsPressed( VK_SPACE ) )
-    {
-        wnd.GetGraphics().DisableImgui();
-    }
-    else
-    {
-        wnd.GetGraphics().EnableImgui();
-    }
     
     wnd.GetGraphics().BeginFrame( 0.07f, 0.0f, 0.12f);
+    wnd.GetGraphics().SetCamera( cam.GetMatrix() );
     
     for (auto &d : drawables)
     {
@@ -122,15 +115,15 @@ void App::DoFrame()
         d->Draw(wnd.GetGraphics() );
     }
 
-    static char buffer[1024];
-
     if ( ImGui::Begin("Simulation Speed") )
     {
         ImGui::SliderFloat( "Speed Factor", &speed_factor, 0.0f, 4.0f );
         ImGui::Text( "Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate );
-        ImGui::InputText( "Butts", buffer, sizeof(buffer) );
+        ImGui::Text( "Status: %s", wnd.kb.IsPressed( VK_SPACE ) ? "PAUSED" : "RUNNING (hold spacebar to pause)" );
     }
     ImGui::End();
+
+    cam.SpawnControlWindow();
     
     wnd.GetGraphics().EndFrame();
 }

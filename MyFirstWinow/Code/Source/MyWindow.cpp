@@ -177,6 +177,8 @@ LRESULT CALLBACK MyWindow::HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPA
     {
         return true;
     }
+
+    const auto& imio = ImGui::GetIO();
     
     switch (msg)
     { 
@@ -190,6 +192,12 @@ LRESULT CALLBACK MyWindow::HandleMessage(HWND hwnd, UINT msg, WPARAM wparam, LPA
                 DestroyWindow(hwnd);
             }
             return -1;
+    default:
+        if( imio.WantCaptureMouse )
+        {
+            break;
+        }
+        break;
         
     }
     return DefWindowProc(hwnd, msg, wparam, lparam);
