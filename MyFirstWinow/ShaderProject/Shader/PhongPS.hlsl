@@ -14,13 +14,13 @@ static const float attQuad = 0.0075f;
 float4 main( float3 worldPos : POSITIONT, float3 n : Normal ) : SV_Target
 {
     // fragment to light vector data
-    const float3 vTol = lightPos - worldPos;
+    const float3 vToL = lightPos - worldPos;
     const float distToL = length(vToL);
     const float3 dirToL = vToL / distToL;
     // diffuse attenuation
     const float att = 1.0f / (attConst + attLin * distToL + attQuad * (distToL * distToL ) );
     // diffuse intensity
     const float3 diffuse = diffuseColor * diffuseIntensity * att * max(0.0f, dot(dirToL, n));
-    // final color
+    // final color  saturate: 把数值限制在 0~1 之间
     return float4(saturate(diffuse + ambient), 1.0f);
 }

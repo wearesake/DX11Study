@@ -38,54 +38,29 @@ Box::Box( Graphics& gfx,
 			struct
 			{
 				dx::XMFLOAT3 pos;
+				dx::XMFLOAT3 n;
 			};
 		};
-
-		const auto model = Cube::Make<Vertex>();
-		//{0, 0, 0} 通常会出现在屏幕的中心。
+		auto model = Cube::MakeIndependent<Vertex>();
+		model.SetNomalsIndependentFlat();
 	
 		AddStaticBind( std::make_unique<VertexBuffer>( gfx, model.vertices ) );
 	
 		AddStaticIndexBuffer( std::make_unique<IndexBuffer>( gfx,model.indices ) );
 
-		auto pvs = std::make_unique<VertexShader>( gfx,L"./ShaderProject/VertexShader.cso" );
+		auto pvs = std::make_unique<VertexShader>( gfx,L"./ShaderProject/PhongVS.cso" );
 		auto pvsbc = pvs->GetBytecode();
 		AddStaticBind( std::move( pvs ) );
-	
-
+		
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
 			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{ "Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0 },
 		};
 		AddStaticBind( std::make_unique<InputLayout>( gfx,ied,pvsbc ) ); //创建并绑定 InputLayout, 告诉 GPU 如何把顶点数据传给 VS
 	
-		AddStaticBind( std::make_unique<PixelShader>( gfx,L"./ShaderProject/PixelShader.cso" ) );
-
-		struct PixelShaderConstants
-		{
-			struct
-			{
-				float r;
-				float g;
-				float b;
-				float a;
-			} face_colors[8];
-		};
-		const PixelShaderConstants cb2 =
-		{
-			{
-				{ 1.0f,1.0f,1.0f },
-				{ 1.0f,0.0f,0.0f },
-				{ 0.0f,1.0f,0.0f },
-				{ 1.0f,1.0f,0.0f },
-				{ 0.0f,0.0f,1.0f },
-				{ 1.0f,0.0f,1.0f },
-				{ 0.0f,1.0f,1.0f },
-				{ 0.0f,0.0f,0.0f },
-			}
-		};
-
-		AddStaticBind( std::make_unique<PixelConstantBuffer<PixelShaderConstants>>( gfx,cb2 ) ); //提供颜色、光照、材质等参数
+		AddStaticBind( std::make_unique<PixelShader>( gfx,L"./ShaderProject/PhongPS.cso" ) );
+		
 		AddStaticBind( std::make_unique<Topology>( gfx,D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST ) ); //告诉 GPU 如何把顶点组合成几何体（如三角形、线段）
 	}
 	

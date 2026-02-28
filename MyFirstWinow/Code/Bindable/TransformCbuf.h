@@ -5,6 +5,12 @@
 
 class TransformCbuf : public Bindable
 {
+private:
+    struct Transforms
+    {
+        DirectX::XMMATRIX modelViewProj;
+        DirectX::XMMATRIX model;
+    };
 public:
     TransformCbuf( Graphics& gfx, const Drawable& parent );
     void Bind( Graphics& gfx ) noexcept override;
@@ -14,6 +20,6 @@ private:
     //视图矩阵（View）
     //投影矩阵（Projection）
     //或者它们的组合（MVP）
-    static std::unique_ptr<VertexConstantBuffer<DirectX::XMMATRIX>> pVcbuf; //DirectX::XMMATRIX 是 4×4 矩阵类型
+    static std::unique_ptr<VertexConstantBuffer<Transforms>> pVcbuf; //DirectX::XMMATRIX 是 4×4 矩阵类型
     const Drawable& parent;
 };

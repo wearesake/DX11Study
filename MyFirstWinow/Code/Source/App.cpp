@@ -12,7 +12,7 @@
 
 GDIPlusManager gdipm;
 
-App::App() : wnd(800, 600, "The Donkey Fart Box")
+App::App() : wnd(800, 600, "The Donkey Fart Box"), light( wnd.GetGraphics() )
 {
     // std::mt19937 rng( std::random_device{}() );
     // std::uniform_real_distribution<float> adist( 0.0f,3.1415f * 2.0f ); //水平方向角度, 0~360° 
@@ -78,7 +78,7 @@ App::App() : wnd(800, 600, "The Donkey Fart Box")
         std::uniform_real_distribution<float> bdist{ 0.4f,3.0f };
         std::uniform_int_distribution<int> latdist{ 5,20 };
         std::uniform_int_distribution<int> longdist{ 10,40 };
-        std::uniform_int_distribution<int> typedist{ 0,4 };
+        std::uniform_int_distribution<int> typedist{ 1,1 };
     };
 
     Factory f( wnd.GetGraphics() );
@@ -108,12 +108,15 @@ void App::DoFrame()
     
     wnd.GetGraphics().BeginFrame( 0.07f, 0.0f, 0.12f);
     wnd.GetGraphics().SetCamera( cam.GetMatrix() );
+    light.Bind( wnd.GetGraphics() );
     
     for (auto &d : drawables)
     {
         d->Update( wnd.kb.IsPressed( VK_SPACE ) ? 0.0f : dt );
         d->Draw(wnd.GetGraphics() );
     }
+    light.Draw( wnd.GetGraphics() );
+    
 
     if ( ImGui::Begin("Simulation Speed") )
     {
@@ -124,6 +127,7 @@ void App::DoFrame()
     ImGui::End();
 
     cam.SpawnControlWindow();
+    light.SpawnControlWindow();
     
     wnd.GetGraphics().EndFrame();
 }
