@@ -36,13 +36,13 @@ public:
             auto& v0 = vertices[ indices[i] ];
             auto& v1 = vertices[ indices[i + 1] ];
             auto& v2 = vertices[ indices[i + 2] ];
-            const auto p0 = XMLoadFloat3( &v0.pos );
+            const auto p0 = XMLoadFloat3( &v0.pos ); //把 float3 转成 SIMD 向量 CPU 有特殊寄存器：可以一次存4个float
             const auto p1 = XMLoadFloat3( &v1.pos );
             const auto p2 = XMLoadFloat3( &v2.pos );
 
-            const auto n = XMVector3Normalize( XMVector3Cross( ( p1 - p0 ), ( p2 - p0 ) ) );
+            const auto n = XMVector3Normalize( XMVector3Cross( ( p1 - p0 ), ( p2 - p0 ) ) ); //计算法线 叉乘
 
-            XMStoreFloat3( &v0.n, n );
+            XMStoreFloat3( &v0.n, n ); //三个顶点公用一个法线
             XMStoreFloat3( &v1.n, n );
             XMStoreFloat3( &v2.n, n );
         }

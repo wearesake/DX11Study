@@ -15,7 +15,8 @@ void TransformCbuf::Bind( Graphics& gfx ) noexcept
     const auto model = parent.GetTransformXM();
     const Transforms tf =
     {
-        DirectX::XMMatrixTranspose( model ),
+        //DirectXMath 用的是 Row-Major（行主序） - HLSL 默认用的是：Column-Major（列主序）
+        DirectX::XMMatrixTranspose( model ),  //对一个 4×4 矩阵做“转置（Transpose）”
         DirectX::XMMatrixTranspose(
             model *
             gfx.GetCamera() *

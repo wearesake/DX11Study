@@ -1,5 +1,6 @@
 cbuffer LightCBuf
 {
+    //HLSL Constant Buffer 对齐规则 16字节 因此C++传递float3数据的时候要考虑对齐问题
     float3 lightPos;
 };
 
@@ -18,9 +19,9 @@ float4 main( float3 worldPos : POSITIONT, float3 n : Normal ) : SV_Target
     const float distToL = length(vToL);
     const float3 dirToL = vToL / distToL;
     // diffuse attenuation
-    const float att = 1.0f / (attConst + attLin * distToL + attQuad * (distToL * distToL ) );
+    const float att = 1.0f / (attConst + attLin * distToL + attQuad * (distToL * distToL)); //标准点光源衰减公式
     // diffuse intensity
-    const float3 diffuse = diffuseColor * diffuseIntensity * att * max(0.0f, dot(dirToL, n));
-    // final color  saturate: 把数值限制在 0~1 之间
-    return float4(saturate(diffuse + ambient), 1.0f);
+    const float3 diffuse = diffuseColor * diffuseIntensity * att * max(0.0f, dot(dirToL, n)); //漫反射公式
+    // final color  saturate: 把数值限制在 0~1 之间,防止过曝。
+    return float4(saturate(diffuse + ambient) * materialColor, 1.0f); //ambient 环境光：防止阴影面完全黑。   
 }

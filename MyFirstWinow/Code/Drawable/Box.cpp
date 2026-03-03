@@ -55,7 +55,7 @@ Box::Box( Graphics& gfx,
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
 			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{ "Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0 },//这个12是结构体Vertex的偏移位置
 		};
 		AddStaticBind( std::make_unique<InputLayout>( gfx,ied,pvsbc ) ); //创建并绑定 InputLayout, 告诉 GPU 如何把顶点数据传给 VS
 	

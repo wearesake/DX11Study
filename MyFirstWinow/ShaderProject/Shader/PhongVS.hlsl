@@ -7,7 +7,7 @@ cbuffer CBuf
 struct VSOut
 {
     float3 worldPos : Position;
-    float3 normal : Normal;
+    float3 normal : Normal; //法线（Normal）决定“这个面朝向哪里”，从而决定“它有多亮”。
     float4 pos : SV_Position;
 };
 
